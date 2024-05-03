@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zxx" class="no-js">
+	<head>
+		<!-- Mobile Specific Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<!-- Favicon-->
+		<link rel="shortcut icon" href="img/fav.png">
+		<!-- Author Meta -->
+		<meta name="author" content="CodePixar">
+		<!-- Meta Description -->
+		<meta name="description" content="">
+		<!-- Meta Keyword -->
+		<meta name="keywords" content="">
+		<!-- meta character set -->
+		<meta charset="UTF-8">
+		<!-- Site Title -->
+		<title>Bobsled</title>
+		<link href="https://fonts.googleapis.com/css?family=Poppins:300,500,600" rel="stylesheet">
+		<!--
+		CSS
+		============================================= -->
+		<link rel="stylesheet" href="css/linearicons.css">
+		<link rel="stylesheet" href="css/owl.carousel.css">
+		<link rel="stylesheet" href="css/font-awesome.min.css">
+		<link rel="stylesheet" href="css/nice-select.css">
+		<link rel="stylesheet" href="css/magnific-popup.css">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="css/main.css">
+		
+	</head>
+	<body>
+		<!-- Start Header Area -->
+		<header class="default-header" style="background: #8460f6;">
+			<div class="container">
+				<div class="header-wrap">
+					<div class="header-top d-flex justify-content-between align-items-center">
+						<div class="logo">
+							<a href="index.html"><img src="img/logo.png" alt=""></a>
+						</div>
+						<div class="main-menubar d-flex align-items-center">
+							<nav class="hide">
+								<a href="index.html">Home</a>
+								<a href="generic.html">Project</a>
+							</nav>
+							<div class="menu-bar"><span class="lnr lnr-menu"></span></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<!-- End Header Area -->
+		<!-- Start Exprience Area -->
+		<section class="section-gap exprience-area">
+				<div class="container">
+					<div class="row justify-content-center">
+						<div class="col-lg-6 col-md-8">
+							<div class="section-title text-center">
+								<h2>医療、微生物システム</h2>
+							</div>
+						</div>
+					</div>
+					<h2>ERダイアグラム</h2>
+					<div class="mermaid">
+						erDiagram
+							medical_facilities {
+								facility_id int
+								name varchar
+								location varchar
+								type varchar
+							}
+						
+							infectious_disease_cases {
+								case_id int
+								facility_id int
+								diagnosis varchar
+								patient_age int
+								patient_gender varchar
+								diagnosis_date date
+							}
+						
+							medical_staff {
+								staff_id int
+								facility_id int
+								name varchar
+								position varchar
+								specialization varchar
+							}
+						
+							patient_records {
+								record_id int
+								case_id int
+								patient_id int
+								admission_date date
+								discharge_date date
+								treatment_description text
+							}
+						
+							medication_inventory {
+								inventory_id int
+								facility_id int
+								medication_name varchar
+								quantity int
+								expiration_date date
+							}
+						
+							laboratory_tests {
+								test_id int
+								case_id int
+								test_name varchar
+								test_date date
+								result varchar
+							}
+						
+							medical_facilities ||--o{ infectious_disease_cases : "has"
+							medical_facilities ||--o{ medical_staff : "employs"
+							infectious_disease_cases ||--o{ patient_records : "includes"
+							medical_facilities ||--o{ medication_inventory : "stocks"
+							infectious_disease_cases ||--o{ laboratory_tests : "has"
+					</div>
+					<div id="explanation"  style="margin-top: 20px;">
+						<h2>ERダイアグラムの説明</h2>
+						<ol>
+							<li><b>1. medical_facilities（医療施設）:</b> 医療施設の情報が含まれます。医療施設は一意の facility_id で識別され、名前、場所、およびタイプなどの属性が含まれます。</li>
+							<li><b>2. infectious_disease_cases（感染症ケース）:</b> 感染症のケース情報が含まれます。ケースは一意の case_id で識別され、どの医療施設で診断されたか、診断内容、患者の年齢や性別、診断日などの情報が含まれます。</li>
+							<li><b>3. medical_staff（医療スタッフ）:</b> 医療スタッフの情報が含まれます。スタッフは一意の staff_id で識別され、どの医療施設で働いているか、名前、役職、専門分野などの情報が含まれます。</li>
+							<li><b>4. patient_records（患者記録）:</b> 患者の入院および退院の記録、および治療に関する情報が含まれます。記録は一意の record_id で識別され、どの感染症ケースに関連しているか、患者のID、入院日、退院日、治療説明などの情報が含まれます。</li>
+							<li><b>5. medication_inventory（医薬品在庫）:</b> 医薬品の在庫情報が含まれます。在庫は一意の inventory_id で識別され、どの医療施設で在庫があるか、医薬品名、数量、有効期限などの情報が含まれます。</li>
+							<li><b>6. laboratory_tests（検査）:</b> 実施された検査の情報が含まれます。検査は一意の test_id で識別され、どの感染症ケースに関連しているか、検査名、検査日、結果などの情報が含まれます。</li>
+						</ol>
+					</div>	
+					<div id="showMap"  style="margin-top: 20px;">
+						<h2>医療施設マップ</h2>
+						<div id="map" style="width: 100%; height: 600px;"></div>
+						<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+						<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+						<script>
+							var mymap = L.map('map').setView([35, 135], 5);
+					
+							L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+								attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+							}).addTo(mymap);
+					
+							// JSONファイルからデータを読み込む
+							fetch('medical.json')
+								.then(response => response.json())
+								.then(data => {
+									// マップ上に医療施設を表示する
+									data.medical_facilities.forEach(function(facility) {
+										L.marker(facility.location).addTo(mymap).bindPopup(facility.name);
+									});
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+						</script>
+					</div>
+
+					<div id="distribution"  style="margin-top: 20px;">
+						<h2>感染症ケースの年齢と性別の分布</h2>
+						<canvas id="distributionChart"></canvas>
+						<script>
+							// JSONファイルからデータを読み込む
+							// データを読み込む
+							fetch('medical.json')
+								.then(response => response.json())
+								.then(data => {
+									// データの解析と情報の抽出
+									const cases = data.infectious_disease_cases;
+									const ageGenderCases = {}; // データを格納するオブジェクト
+
+									// データの計算
+									cases.forEach(caseData => {
+										// 患者の年齢と性別情報を取得
+										const age = caseData.patient_age;
+										const gender = caseData.patient_gender;
+
+										// 年齢グループを計算
+										const ageGroup = Math.floor(age / 10) * 10;
+
+										// 年齢グループと性別がオブジェクト内に存在しない場合、追加する
+										if (!ageGenderCases[ageGroup]) {
+											ageGenderCases[ageGroup] = {
+												male: 0,
+												female: 0
+											};
+										}
+
+										// 対応するケース数を増やす
+										if (gender === 'Male') {
+											ageGenderCases[ageGroup].male++;
+										} else if (gender === 'Female') {
+											ageGenderCases[ageGroup].female++;
+										}
+									});
+
+									// グラフの作成
+									const ageGroups = Object.keys(ageGenderCases).map(key => parseInt(key));
+									const maleCases = ageGroups.map(group => ageGenderCases[group].male);
+									const femaleCases = ageGroups.map(group => ageGenderCases[group].female);
+
+									const ctx = document.getElementById('distributionChart').getContext('2d');
+									const myChart = new Chart(ctx, {
+										type: 'bar',
+										data: {
+											labels: ageGroups.map(group => group.toString()), // 年齢グループを文字列に変換
+											datasets: [{
+												label: '男性', // 男性
+												data: maleCases, // 男性のケース数
+												backgroundColor: 'rgba(255, 99, 132, 0.2)',
+												borderColor: 'rgba(255, 99, 132, 1)',
+												borderWidth: 1
+											},
+											{
+												label: '女性', // 女性
+												data: femaleCases, // 女性のケース数
+												backgroundColor: 'rgba(54, 162, 235, 0.2)',
+												borderColor: 'rgba(54, 162, 235, 1)',
+												borderWidth: 1
+											}]
+										},
+										options: {
+											scales: {
+												yAxes: [{
+													ticks: {
+														beginAtZero: true
+													}
+												}]
+											}
+										}
+									});
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+
+						</script>
+					</div>	
+					<div id="medication_stock_quantity"  style="margin-top: 20px;">
+						<h2>医薬品在庫の数量</h2>
+						<canvas id="quantityChart"></canvas>
+					
+						<script>
+							// データを読み込む
+							fetch('medical.json')
+								.then(response => response.json())
+								.then(data => {
+									// 医薬品在庫データを取得
+									const inventory = data.medication_inventory;
+					
+									// 医薬品の種類ごとの数量を計算する
+									const medicationTypes = {}; // 医薬品の種類ごとの数量を格納するオブジェクト
+					
+									inventory.forEach(item => {
+										const medicationName = item.medication_name;
+										const quantity = item.quantity;
+					
+										if (!medicationTypes[medicationName]) {
+											medicationTypes[medicationName] = 0;
+										}
+					
+										medicationTypes[medicationName] += quantity;
+									});
+					
+									// データを配列に変換
+									const labels = Object.keys(medicationTypes);
+									const dataValues = Object.values(medicationTypes);
+					
+									// 円グラフを作成
+									const ctx = document.getElementById('quantityChart').getContext('2d');
+									const myChart = new Chart(ctx, {
+										type: 'pie',
+										data: {
+											labels: labels,
+											datasets: [{
+												data: dataValues,
+												backgroundColor: [
+													'rgba(255, 99, 132, 0.2)',
+													'rgba(54, 162, 235, 0.2)',
+													'rgba(255, 206, 86, 0.2)',
+													'rgba(75, 192, 192, 0.2)',
+													'rgba(153, 102, 255, 0.2)',
+													'rgba(255, 159, 64, 0.2)'
+												],
+												borderColor: [
+													'rgba(255, 99, 132, 1)',
+													'rgba(54, 162, 235, 1)',
+													'rgba(255, 206, 86, 1)',
+													'rgba(75, 192, 192, 1)',
+													'rgba(153, 102, 255, 1)',
+													'rgba(255, 159, 64, 1)'
+												],
+												borderWidth: 1
+											}]
+										},
+										options: {
+											scales: {
+												yAxes: [{
+													ticks: {
+														beginAtZero: true
+													}
+												}]
+											}
+										}
+									});
+								})
+								.catch(error => {
+									console.error('Error:', error);
+								});
+						</script>
+					</div>	
+			</div>
+		</section>
+		<!-- End Exprience Area -->
+		<script src="js/vendor/jquery-2.2.4.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+		<script src="js/vendor/bootstrap.min.js"></script>
+		<script src="js/jquery.ajaxchimp.min.js"></script>
+		<script src="js/owl.carousel.min.js"></script>
+		<script src="js/jquery.nice-select.min.js"></script>
+		<script src="js/jquery.magnific-popup.min.js"></script>
+		<script src="js/main.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<script>mermaid.initialize({startOnLoad:true});</script>
+	</body>
+</html>
